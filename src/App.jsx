@@ -40,6 +40,8 @@ int main() {
     setOutput("Running...\n");
 
     try {
+      console.log("Sending code to backend:", { code, language, input });
+      console.log("API URL:", API_URL);
       const res = await axios.post(`${API_URL}/run`, {
         code,
         language,
