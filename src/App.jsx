@@ -13,6 +13,9 @@ const supabase = createClient(
 
 function App() {
   const [user, setUser] = useState(null);
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python3");
@@ -47,19 +50,41 @@ int main() {
       setUser(data.user);
     };
     getUser();
+
+    // 🔥 keeps user logged in after refresh
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+      }
+    );
+
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  const login = async () => {
-    const email = prompt("Enter email");
-    const password = prompt("Enter password");
-
+  const handleLogin = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
+      email: inputEmail,
+      password: inputPassword
     });
 
-    if (error) alert(error.message);
-    else setUser(data.user);
+    if (error) {
+      alert(error.message);
+    } else {
+      setUser(data.user);
+    }
+  };
+
+  const handleSignup = async () => {
+    const { error } = await supabase.auth.signUp({
+      email: inputEmail,
+      password: inputPassword
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Signup successful. Now login.");
+    }
   };
 
   const logout = async () => {
@@ -94,7 +119,7 @@ int main() {
       getHistory();
     } catch (err) {
       console.error(err);
-      setOutput("Error running code");
+      setOutput(err.response?.data?.error || "Error running code");
     }
 
     setLoading(false);
@@ -103,48 +128,50 @@ int main() {
   /* ================= HISTORY ================= */
 
   const getHistory = async () => {
-    const res = await axios.get(`${API_URL}/history/${user.id}`);
-    setHistory(res.data);
+    try {
+      const res = await axios.get(`${API_URL}/history/${user.id}`);
+      setHistory(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
     if (user) getHistory();
   }, [user]);
 
-  /* ================= LOGIN SCREEN ================= */
+  /* ================= LOGIN UI ================= */
 
-if (!user) {
-  return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>Code Compiler</h2>
-        <p>Login to continue</p>
+  if (!user) {
+    return (
+      <div className="login-container">
+        <div className="login-box">
+          <h2>Code Compiler</h2>
+          <p>Login to continue</p>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={inputEmail}
-          onChange={(e) => setInputEmail(e.target.value)}
-        />
+          <input
+            type="email"
+            placeholder="Email"
+            value={inputEmail}
+            onChange={(e) => setInputEmail(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={inputPassword}
-          onChange={(e) => setInputPassword(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={inputPassword}
+            onChange={(e) => setInputPassword(e.target.value)}
+          />
 
-        <button onClick={handleLogin}>
-          Login
-        </button>
+          <button onClick={handleLogin}>Login</button>
 
-        <button className="secondary" onClick={handleSignup}>
-          Sign Up
-        </button>
+          <button className="secondary" onClick={handleSignup}>
+            Sign Up
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   /* ================= MAIN APP ================= */
 
@@ -171,7 +198,7 @@ if (!user) {
       </div>
 
       <div className="main">
-        {/* LEFT: EDITOR */}
+        {/* EDITOR */}
         <div className="editor">
           <Editor
             height="100%"
@@ -190,8 +217,8 @@ if (!user) {
           />
         </div>
 
-        {/* RIGHT: HISTORY */}
-        <div style={{ width: "250px", overflow: "auto", background: "#111" }}>
+        {/* HISTORY */}
+        <div style={{ width: "250px", background: "#111", overflow: "auto" }}>
           <h3 style={{ padding: "10px" }}>History</h3>
 
           {history.map((item, i) => (
