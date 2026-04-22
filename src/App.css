@@ -22,50 +22,56 @@ body {
   align-items: center;
 }
 
-/* Main layout (VERTICAL) */
+/* Main layout */
 .main {
   flex: 1;
   display: flex;
-  flex-direction: column; /* 👈 KEY CHANGE */
+  flex-direction: column;
+  overflow: hidden; /* 👈 IMPORTANT */
 }
 
-/* Editor takes top space */
+/* Editor */
 .editor {
-  height: 50%;
+  flex: 2; /* 👈 takes more space */
+  min-height: 0; /* 👈 CRITICAL FIX */
 }
 
-/* Input + Output stack */
+/* Bottom section */
 .side {
-  height: 50%;
+  flex: 1; /* 👈 smaller than editor */
   display: flex;
   flex-direction: column;
+  min-height: 0; /* 👈 prevents overflow bug */
 }
 
-/* Input box */
+/* Input */
 .input-box {
   flex: 1;
   padding: 10px;
   background: #111;
   border-top: 1px solid #333;
+  min-height: 0;
 }
 
-/* Output box */
+/* Output */
 .output {
   flex: 1;
   padding: 10px;
   background: #111;
   border-top: 1px solid #333;
   overflow: auto;
+  min-height: 0;
 }
 
 /* Textarea */
 textarea {
   width: 100%;
-  height: 80%;
+  height: 100%;
   background: #222;
   color: white;
   border: none;
   padding: 10px;
+  resize: none;
 }
 
 /* Output text */

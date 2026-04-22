@@ -79,7 +79,6 @@ int main() {
       <div className="main">
         <div className="editor">
           <Editor
-            height="60%"
             theme="vs-dark"
             language={
               language === "nodejs"
