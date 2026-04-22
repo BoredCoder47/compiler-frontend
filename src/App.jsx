@@ -113,14 +113,38 @@ int main() {
 
   /* ================= LOGIN SCREEN ================= */
 
-  if (!user) {
-    return (
-      <div style={{ padding: 20 }}>
-        <h2>Login</h2>
-        <button onClick={login}>Login</button>
+if (!user) {
+  return (
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Code Compiler</h2>
+        <p>Login to continue</p>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={inputEmail}
+          onChange={(e) => setInputEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={inputPassword}
+          onChange={(e) => setInputPassword(e.target.value)}
+        />
+
+        <button onClick={handleLogin}>
+          Login
+        </button>
+
+        <button className="secondary" onClick={handleSignup}>
+          Sign Up
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   /* ================= MAIN APP ================= */
 
