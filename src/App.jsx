@@ -207,10 +207,10 @@ int main() {
               language === "nodejs"
                 ? "javascript"
                 : language === "cpp17"
-                ? "cpp"
-                : language === "python3"
-                ? "python"
-                : "java"
+                  ? "cpp"
+                  : language === "python3"
+                    ? "python"
+                    : "java"
             }
             value={code}
             onChange={(val) => setCode(val)}
@@ -234,30 +234,31 @@ int main() {
           <pre>{output || "Output will appear here..."}</pre>
         </div>
       </div>
-       <div style={{ width: "250px", background: "#111", overflow: "auto" }}>
-          <h3 style={{ padding: "10px" }}>History</h3>
+      <div style={{ width: "250px", background: "#111", overflow: "auto" }}>
+        <h3 style={{ padding: "10px" }}>History</h3>
 
-          {history.map((item, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "8px",
-                borderBottom: "1px solid #333",
-                cursor: "pointer"
-              }}
-              onClick={() => {
-                setCode(item.code);
-                setInput(item.input);
-                setOutput(item.output);
-              }}
-            >
-              <small>{item.language}</small>
-              <br />
-              <small>{item.output.slice(0, 40)}</small>
-            </div>
-          ))}
-        </div>
+        {history.map((item, i) => (
+          <div
+            key={i}
+            style={{
+              padding: "8px",
+              borderBottom: "1px solid #333",
+              cursor: "pointer"
+            }}
+            onClick={() => {
+              setCode(item.code);
+              setInput(item.input);
+              setOutput(item.output);
+            }}
+          >
+            <small>{item.language}</small>
+            <br />
+            <small>{item.output.slice(0, 40)}</small>
+          </div>
+        ))}
+      </div>
     </div>
+    
   );
 }
 
