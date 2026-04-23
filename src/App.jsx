@@ -23,6 +23,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
 
+  // 🔥 IMPORTANT STATES
+  const [activeTab, setActiveTab] = useState("editor");
+  const [openIndex, setOpenIndex] = useState(null);
+
   const templates = {
     python3: "print('Hello World')",
     nodejs: "console.log('Hello World');",
@@ -51,7 +55,6 @@ int main() {
     };
     getUser();
 
-    // 🔥 keeps user logged in after refresh
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user || null);
@@ -67,11 +70,8 @@ int main() {
       password: inputPassword
     });
 
-    if (error) {
-      alert(error.message);
-    } else {
-      setUser(data.user);
-    }
+    if (error) alert(error.message);
+    else setUser(data.user);
   };
 
   const handleSignup = async () => {
@@ -80,11 +80,8 @@ int main() {
       password: inputPassword
     });
 
-    if (error) {
-      alert(error.message);
-    } else {
-      alert("Signup successful. Now login.");
-    }
+    if (error) alert(error.message);
+    else alert("Signup successful. Now login.");
   };
 
   const logout = async () => {
@@ -118,7 +115,6 @@ int main() {
       setOutput(res.data.output || "No output");
       getHistory();
     } catch (err) {
-      console.error(err);
       setOutput(err.response?.data?.error || "Error running code");
     }
 
@@ -140,31 +136,26 @@ int main() {
     if (user) getHistory();
   }, [user]);
 
-  /* ================= LOGIN UI ================= */
+  /* ================= LOGIN ================= */
 
   if (!user) {
     return (
       <div className="login-container">
         <div className="login-box">
           <h2>Code Compiler</h2>
-          <p>Login to continue</p>
-
           <input
             type="email"
             placeholder="Email"
             value={inputEmail}
             onChange={(e) => setInputEmail(e.target.value)}
           />
-
           <input
             type="password"
             placeholder="Password"
             value={inputPassword}
             onChange={(e) => setInputPassword(e.target.value)}
           />
-
           <button onClick={handleLogin}>Login</button>
-
           <button className="secondary" onClick={handleSignup}>
             Sign Up
           </button>
@@ -173,10 +164,11 @@ int main() {
     );
   }
 
-  /* ================= MAIN APP ================= */
+  /* ================= UI ================= */
 
   return (
     <div className="app">
+      {/* HEADER */}
       <div className="header">
         <h2>Online Compiler</h2>
 
@@ -196,84 +188,101 @@ int main() {
 
         <button onClick={logout}>Logout</button>
       </div>
-{/* MAIN CONTENT */}
-<div className="main">
-  {activeTab === "editor" && (
-    <div className="editor">
-      <Editor
-        height="100%"
-        theme="vs-dark"
-        language={
-          language === "nodejs"
-            ? "javascript"
-            : language === "cpp17"
-            ? "cpp"
-            : language === "python3"
-            ? "python"
-            : "java"
-        }
-        value={code}
-        onChange={(val) => setCode(val)}
-      />
-    </div>
-  )}
 
-  {activeTab === "history" && (
-    <div className="history-page">
-      <h3>History</h3>
+      {/* TABS */}
+      <div className="tabs">
+        <button
+          className={activeTab === "editor" ? "active" : ""}
+          onClick={() => setActiveTab("editor")}
+        >
+          Editor
+        </button>
 
-      {history.map((item, i) => (
-        <div key={i} className="history-card">
-          <div
-            className="history-header"
-            onClick={() =>
-              setOpenIndex(openIndex === i ? null : i)
-            }
-          >
-            <span>{item.language}</span>
-            <span>▼</span>
+        <button
+          className={activeTab === "history" ? "active" : ""}
+          onClick={() => setActiveTab("history")}
+        >
+          History
+        </button>
+      </div>
+
+      {/* MAIN */}
+      <div className="main">
+        {activeTab === "editor" && (
+          <div className="editor">
+            <Editor
+              height="100%"
+              theme="vs-dark"
+              language={
+                language === "nodejs"
+                  ? "javascript"
+                  : language === "cpp17"
+                  ? "cpp"
+                  : language === "python3"
+                  ? "python"
+                  : "java"
+              }
+              value={code}
+              onChange={(val) => setCode(val)}
+            />
           </div>
+        )}
 
-          {openIndex === i && (
-            <div className="history-body">
-              <pre>{item.code}</pre>
-              <hr />
-              <pre>{item.output}</pre>
+        {activeTab === "history" && (
+          <div className="history-page">
+            <h3>History</h3>
 
-              <button
-                onClick={() => {
-                  setCode(item.code);
-                  setInput(item.input);
-                  setOutput(item.output);
-                  setActiveTab("editor");
-                }}
-              >
-                Load
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
+            {history.map((item, i) => (
+              <div key={i} className="history-card">
+                <div
+                  className="history-header"
+                  onClick={() =>
+                    setOpenIndex(openIndex === i ? null : i)
+                  }
+                >
+                  <span>{item.language}</span>
+                  <span>▼</span>
+                </div>
+
+                {openIndex === i && (
+                  <div className="history-body">
+                    <pre>{item.code}</pre>
+                    <hr />
+                    <pre>{item.output}</pre>
+
+                    <button
+                      onClick={() => {
+                        setCode(item.code);
+                        setInput(item.input);
+                        setOutput(item.output);
+                        setActiveTab("editor");
+                      }}
+                    >
+                      Load
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* INPUT */}
+      <div className="input-box">
+        <h3>Input</h3>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </div>
+
+      {/* OUTPUT */}
+      <div className="output">
+        <h3>Output</h3>
+        <pre>{output || "Output will appear here..."}</pre>
+      </div>
     </div>
-  )}
-</div>
-
-{/* INPUT */}
-<div className="input-box">
-  <h3>Input</h3>
-  <textarea
-    value={input}
-    onChange={(e) => setInput(e.target.value)}
-  />
-</div>
-
-{/* OUTPUT */}
-<div className="output">
-  <h3>Output</h3>
-  <pre>{output || "Output will appear here..."}</pre>
-</div>
-    </div>
-
   );
 }
 

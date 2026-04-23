@@ -2,7 +2,6 @@ body {
   margin: 0;
   background: #1e1e1e;
   color: white;
-  font-family: Arial, sans-serif;
 }
 
 .app {
@@ -31,20 +30,18 @@ body {
   border: none;
   background: #2d2d2d;
   color: white;
-  cursor: pointer;
 }
 
 .tabs .active {
   background: #007acc;
 }
 
-/* MAIN (Editor / History) */
+/* MAIN */
 .main {
   flex: 1;
   overflow: hidden;
 }
 
-/* EDITOR FULL */
 .editor {
   height: 100%;
 }
@@ -56,7 +53,6 @@ body {
   padding: 10px;
 }
 
-/* HISTORY CARDS */
 .history-card {
   background: #252526;
   border: 1px solid #333;
@@ -76,16 +72,11 @@ body {
   background: #111;
 }
 
-.history-body pre {
-  white-space: pre-wrap;
-}
-
 /* INPUT */
 .input-box {
   height: 20%;
   padding: 10px;
   background: #111;
-  border-top: 1px solid #333;
 }
 
 textarea {
@@ -93,8 +84,6 @@ textarea {
   height: 80%;
   background: #1e1e1e;
   color: white;
-  border: 1px solid #333;
-  padding: 10px;
 }
 
 /* OUTPUT */
@@ -102,10 +91,5 @@ textarea {
   height: 20%;
   padding: 10px;
   background: #111;
-  border-top: 1px solid #333;
   overflow: auto;
-}
-
-pre {
-  white-space: pre-wrap;
 }
