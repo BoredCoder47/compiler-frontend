@@ -217,8 +217,24 @@ int main() {
           />
         </div>
 
-        {/* HISTORY */}
-        <div style={{ width: "250px", background: "#111", overflow: "auto" }}>
+      </div>
+
+      {/* INPUT + OUTPUT */}
+      <div className="side">
+        <div className="input-box">
+          <h3>Input</h3>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </div>
+
+        <div className="output">
+          <h3>Output</h3>
+          <pre>{output || "Output will appear here..."}</pre>
+        </div>
+      </div>
+       <div style={{ width: "250px", background: "#111", overflow: "auto" }}>
           <h3 style={{ padding: "10px" }}>History</h3>
 
           {history.map((item, i) => (
@@ -241,23 +257,6 @@ int main() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* INPUT + OUTPUT */}
-      <div className="side">
-        <div className="input-box">
-          <h3>Input</h3>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
-
-        <div className="output">
-          <h3>Output</h3>
-          <pre>{output || "Output will appear here..."}</pre>
-        </div>
-      </div>
     </div>
   );
 }
