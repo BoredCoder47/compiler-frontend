@@ -196,69 +196,84 @@ int main() {
 
         <button onClick={logout}>Logout</button>
       </div>
-
-      <div className="main">
-        {/* EDITOR */}
-        <div className="editor">
-          <Editor
-            height="100%"
-            theme="vs-dark"
-            language={
-              language === "nodejs"
-                ? "javascript"
-                : language === "cpp17"
-                  ? "cpp"
-                  : language === "python3"
-                    ? "python"
-                    : "java"
-            }
-            value={code}
-            onChange={(val) => setCode(val)}
-          />
-        </div>
-
-      </div>
-
-      {/* INPUT + OUTPUT */}
-      <div className="side">
-        <div className="input-box">
-          <h3>Input</h3>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
-
-        <div className="output">
-          <h3>Output</h3>
-          <pre>{output || "Output will appear here..."}</pre>
-        </div>
-      </div>
-      <div style={{ width: "250px", background: "#111", overflow: "auto" }}>
-        <h3 style={{ padding: "10px" }}>History</h3>
-
-        {history.map((item, i) => (
-          <div
-            key={i}
-            style={{
-              padding: "8px",
-              borderBottom: "1px solid #333",
-              cursor: "pointer"
-            }}
-            onClick={() => {
-              setCode(item.code);
-              setInput(item.input);
-              setOutput(item.output);
-            }}
-          >
-            <small>{item.language}</small>
-            <br />
-            <small>{item.output.slice(0, 40)}</small>
-          </div>
-        ))}
-      </div>
+{/* MAIN CONTENT */}
+<div className="main">
+  {activeTab === "editor" && (
+    <div className="editor">
+      <Editor
+        height="100%"
+        theme="vs-dark"
+        language={
+          language === "nodejs"
+            ? "javascript"
+            : language === "cpp17"
+            ? "cpp"
+            : language === "python3"
+            ? "python"
+            : "java"
+        }
+        value={code}
+        onChange={(val) => setCode(val)}
+      />
     </div>
-    
+  )}
+
+  {activeTab === "history" && (
+    <div className="history-page">
+      <h3>History</h3>
+
+      {history.map((item, i) => (
+        <div key={i} className="history-card">
+          <div
+            className="history-header"
+            onClick={() =>
+              setOpenIndex(openIndex === i ? null : i)
+            }
+          >
+            <span>{item.language}</span>
+            <span>▼</span>
+          </div>
+
+          {openIndex === i && (
+            <div className="history-body">
+              <pre>{item.code}</pre>
+              <hr />
+              <pre>{item.output}</pre>
+
+              <button
+                onClick={() => {
+                  setCode(item.code);
+                  setInput(item.input);
+                  setOutput(item.output);
+                  setActiveTab("editor");
+                }}
+              >
+                Load
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+{/* INPUT */}
+<div className="input-box">
+  <h3>Input</h3>
+  <textarea
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+  />
+</div>
+
+{/* OUTPUT */}
+<div className="output">
+  <h3>Output</h3>
+  <pre>{output || "Output will appear here..."}</pre>
+</div>
+    </div>
+
   );
 }
 
