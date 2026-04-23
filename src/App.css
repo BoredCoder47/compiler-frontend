@@ -131,3 +131,58 @@ textarea {
   background: #444;
   border-radius: 4px;
 }
+.tabs {
+  display: flex;
+  background: #2d2d2d;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background: #007acc;
+}
+
+.history-page {
+  padding: 10px;
+  height: 100%;
+  overflow: auto;
+}
+
+.history-card {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+.history-header {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.history-body {
+  padding: 10px;
+  background: #111;
+}
+
+.history-body pre {
+  white-space: pre-wrap;
+}
+
+.history-body button {
+  margin-top: 10px;
+  background: #007acc;
+  border: none;
+  padding: 6px 10px;
+  color: white;
+  cursor: pointer;
+}
